@@ -35,6 +35,7 @@ function loadForm(){
 
     function makeLabeledInput(item){
         if(item != "dummy"){
+            //dry here
             let node = document.createElement("P");
             let inputLabel = document.createElement("LABEL");
                 inputLabel.setAttribute("value", `${item}:`);
@@ -49,6 +50,7 @@ function loadForm(){
                 
             node.appendChild(inputLabel);
             node.appendChild(inputText);
+            //to here (end dry)
             form.appendChild(node);
         }
         if(item==="dummy"){
@@ -56,21 +58,27 @@ function loadForm(){
                 
                 let node = document.createElement("P");
                 let inputLabel = document.createElement("LABEL");
-                    inputLabel.setAttribute("value", `${item}-${i}:`);
+                    inputLabel.setAttribute("value", `${item}:`);
                     inputLabel.innerText=`${item}-${i}: `;
                     inputLabel.setAttribute("class", "capitalize");
                     inputLabel.setAttribute("for", `${item}-${i}`)
                     
                 let inputText = document.createElement("INPUT")
-                    inputText.setAttribute("name", `${item}-${i}`);
+                    inputText.setAttribute("name", "dummies");
                     inputText.setAttribute("id", `${item}-${i}`);
                     inputText.setAttribute("type", "text");
 
                     node.appendChild(inputLabel);
                     node.appendChild(inputText);
                 if(i===3){
+                    
                     let plusBtn = document.createElement("BUTTON");
+                        //set button identifier for quick find
                         plusBtn.innerText = "+";
+                        plusBtn.addEventListener("click", (e)=>{
+                            let count = document.getElementsByName("dummies").length;
+                            //get the number of previous dummies, delete previous button, add new row (with button)
+                        });
                     node.appendChild(plusBtn);
                 }
                 form.appendChild(node);
