@@ -21,70 +21,87 @@ function loadForm(){
           form.id="add-question-form"
           form.class = "add-question-form";
     document.body.appendChild(form);
-    const formItems = ["question", "answer", "dummy"] //not a great way but it'll do for now.
+    const formItems = ["question", "answer", ["dummy", "dummy", "dummy"]]; //not a great way but it'll do for now.
     //create part to upload diagram
     //create that part with eventListener that makes a Labeled Input for the diagram_info
     //if param[diagram_info] && object.diagram.attached? Then make the object in javascript using the right class
     
     //diagamInput
-    formItems.forEach( item => makeLabeledInput(item));
+    formItems.forEach( item => makeAdditionalInput(item) );
 
     const submitBtn = document.createElement("BUTTON");
     submitBtn.innerText = "Submit";
+    submitBtn.setAttribute("id", "submitButton");
     form.appendChild(submitBtn);
 
-    function makeLabeledInput(item){
-        if(item != "dummy"){
-            //dry here
-            let node = document.createElement("P");
-            let inputLabel = document.createElement("LABEL");
-                inputLabel.setAttribute("value", `${item}:`);
-                inputLabel.innerText=`${item}: `;
-                inputLabel.setAttribute("class", "capitalize");
-                inputLabel.setAttribute("for", `${item}`)
-                
-            let inputText = document.createElement("INPUT")
-                inputText.setAttribute("name", `${item}`);
-                inputText.setAttribute("id", `${item}`);
-                inputText.setAttribute("type", "text");
-                
-            node.appendChild(inputLabel);
-            node.appendChild(inputText);
-            //to here (end dry)
-            form.appendChild(node);
-        }
-        if(item==="dummy"){
-            for(let i=1; i<=3; i++){
-                
-                let node = document.createElement("P");
-                let inputLabel = document.createElement("LABEL");
-                    inputLabel.setAttribute("value", `${item}:`);
-                    inputLabel.innerText=`${item}-${i}: `;
-                    inputLabel.setAttribute("class", "capitalize");
-                    inputLabel.setAttribute("for", `${item}-${i}`)
-                    
-                let inputText = document.createElement("INPUT")
-                    inputText.setAttribute("name", "dummies");
-                    inputText.setAttribute("id", `${item}-${i}`);
-                    inputText.setAttribute("type", "text");
 
-                    node.appendChild(inputLabel);
-                    node.appendChild(inputText);
-                if(i===3){
+    function makeAdditionalInput(item){
+        if(Array.isArray(item)){
+            for(let i=0; i<item.length; i++){ 
+                let row = makeLabeledInput(item[i], i);
+
+                if(i===item.length-1){
                     
                     let plusBtn = document.createElement("BUTTON");
                         //set button identifier for quick find
                         plusBtn.innerText = "+";
-                        plusBtn.addEventListener("click", (e)=>{
+                        plusBtn.setAttribute("id", "addButton");
+                        plusBtn.addEventListener("click", (e)=> {
                             let count = document.getElementsByName("dummies").length;
-                            //get the number of previous dummies, delete previous button, add new row (with button)
-                        });
-                    node.appendChild(plusBtn);
-                }
-                form.appendChild(node);
-            }
+                            let btn = e.target;
+                            let additionalRow = makeLabeledInput("dummy",count)
+                            let dummyInputs = Object.values(document.getElementsByName("dummies"));
+                            if (dummyInputs.every(input => input.value)){
+                                btn.parentElement.removeChild(btn);
+                                additionalRow.appendChild(btn);
+                                let submitBtn = document.getElementById("submitButton");
+                                form.removeChild(submitBtn);
+                                form.appendChild(additionalRow);
+                                form.appendChild(submitBtn);
+                            }
+                            else{
+                                dummyInputs.forEach( input => {
+                                    if(!input.value){input.placeholder = "Must have input before you can add another"}
+                                })
+                            }
 
+                        });
+                    row.appendChild(plusBtn);
+                }
+                form.appendChild(row);
+            }
         }
+        else {
+            let row = makeLabeledInput(item);
+            form.appendChild(row);
+        }
+    }
+
+    function makeLabeledInput(item,number = false){
+        let node = document.createElement("P");
+        let inputLabel = document.createElement("LABEL");
+            inputLabel.setAttribute("value", `${item}:`);
+            inputLabel.setAttribute("class", "capitalize");
+        let inputText = document.createElement("INPUT")
+            inputText.setAttribute("type", "text");
+            if(number) {
+                inputLabel.innerText=`${item}-${number}: `;
+                inputLabel.setAttribute("for", `${item}-${number}`); 
+                inputText.setAttribute("name", `${item}-${number}`);
+                inputText.setAttribute("id", `${item}-${number}`);
+            }
+            else { 
+                inputLabel.innerText=`${item}: `;
+                inputLabel.setAttribute("for", `${item}`);
+                inputText.setAttribute("name", `${item}`);
+                inputText.setAttribute("id", `${item}`);
+    
+            }
+        if(item === "dummy"){ inputText.setAttribute("name", "dummies"); } // document.getElementsByName("dummies") for array of dummies
+            
+        node.appendChild(inputLabel);
+        node.appendChild(inputText);
+        return node;
     }
        
 }
@@ -99,7 +116,7 @@ class Question {
     }
 
     pickDummies(requiredNumber){
-        requiredNumber = requiredNumber || 3;
+        requiredNumber = 3 || requiredNumber;
         const chosenQuestions = [];
         let questionPool =  [...this.dummy]
         if(requiredNumber > questionPool.length){ return console.log(`Not enough questions to fulfil ${requiredNumber} questions`);} //make a throw and catch exception
@@ -126,7 +143,7 @@ class QuestionWithDiagram extends Question{
     }
 }
 
-//blank question -- do i even need it!? -- Great for quick testing
+//blank question -- Great for quick testing
 const blank = new Question(
     "If the population of bobcats decreases, what will most likely be the long-term effect on the rabbit population?", "It will increase and then decrease.",
 ["It will increase, only.", "It will decrease, only.", "It will decrease and then increase."])
