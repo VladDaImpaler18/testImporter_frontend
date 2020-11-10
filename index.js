@@ -140,6 +140,7 @@ function loadForm(){
 
 // classes
 
+
 class Question {
     constructor(question, answer, dummy=[]){
         this.question = question;
