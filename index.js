@@ -1,15 +1,43 @@
 
 document.addEventListener("DOMContentLoaded", () => {
-    
     document.addEventListener("submit", (e) => {
         e.preventDefault();
+        if(e.submitter === document.getElementById("submitButton")) {
+
+        
+            let configObj = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(/*have to put something here*/)
+        };
+
+      //fetch("http://localhost:3000/questions/create", configObj);
         //send data as POST to backend controller
         //data is all the input forms with proper labels and 
         // a correct amount of dummy answers
-
+    }
+    
     })
 
 })
+
+function formToJSON(form_element){
+    const params = {};
+    const dummies = [];
+    let inputFields = form_element.querySelectorAll("input");
+    inputFields.forEach( element => { 
+        if(element.value){ 
+            if(element.name === "dummies") { return dummies.push(element.value); }
+            else { return params[element.id] = element.value; }
+        }
+    
+    });
+    params["dummy"] = dummies;
+    return JSON.stringify(params);
+}
 
 // End of Dom Loaded
 function loadForm(){
@@ -49,7 +77,7 @@ function loadForm(){
                         plusBtn.addEventListener("click", (e)=> {
                             let count = document.getElementsByName("dummies").length;
                             let btn = e.target;
-                            let additionalRow = makeLabeledInput("dummy",count)
+                            let additionalRow = makeLabeledInput("dummy",count);
                             let dummyInputs = Object.values(document.getElementsByName("dummies"));
                             if (dummyInputs.every(input => input.value)){
                                 btn.parentElement.removeChild(btn);
@@ -64,7 +92,6 @@ function loadForm(){
                                     if(!input.value){input.placeholder = "Must have input before you can add another"}
                                 })
                             }
-
                         });
                     row.appendChild(plusBtn);
                 }
@@ -115,8 +142,7 @@ class Question {
         this.dummy = dummy;
     }
 
-    pickDummies(requiredNumber){
-        requiredNumber = 3 || requiredNumber;
+    pickDummies(requiredNumber = 3){
         const chosenQuestions = [];
         let questionPool =  [...this.dummy]
         if(requiredNumber > questionPool.length){ return console.log(`Not enough questions to fulfil ${requiredNumber} questions`);} //make a throw and catch exception
@@ -124,8 +150,8 @@ class Question {
             return array[array.length * Math.random() << 0];
         };
         while(chosenQuestions.length < requiredNumber){
-            const randomQ = pickRandomly(questionPool);
-            questionPool.splice(questionPool.indexOf(randomQ),1);
+            const randomQ = pickRandomly(questionPool); //"this answer is a dummy answer."
+            const pickedQ = questionPool.splice(questionPool.indexOf(randomQ),1); //finds index of the above result, and splices 1 out, returning it
             chosenQuestions.push(randomQ);
             console.log(`chosen length = ${chosenQuestions.length}`);
             console.log(`original array = ${this.dummy.length}`);
