@@ -3,18 +3,23 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("submit", (e) => {
         e.preventDefault();
         if(e.submitter === document.getElementById("submitButton")) {
-
-        
+            let form = e.target;
+            let params = formToParams(form);
             let configObj = {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
-            body: JSON.stringify(/*have to put something here*/)
-        };
-
-      //fetch("http://localhost:3000/questions/create", configObj);
+            body: JSON.stringify(params)
+            };
+        fetch("http://localhost:3000/questions", configObj)
+            .then(response => response.json())
+            .then(obj=>console.log(obj))
+            .catch(error=> {
+                alert("Error in send");
+                console.log(error.message);
+            });
         //send data as POST to backend controller
         //data is all the input forms with proper labels and 
         // a correct amount of dummy answers
@@ -24,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 })
 
-function formToJSON(form_element){
+function formToParams(form_element){
     const params = {};
     const dummies = [];
     let inputFields = form_element.querySelectorAll("input");
@@ -36,7 +41,7 @@ function formToJSON(form_element){
     
     });
     params["dummy"] = dummies;
-    return JSON.stringify(params);
+    return params;
 }
 
 // End of Dom Loaded
