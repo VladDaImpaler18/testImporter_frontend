@@ -3,6 +3,7 @@ class Question {
         this.question = question;
         this.answer = answer;
         this.dummy = dummy;
+        Question.all.push(this);
     }
 
     pickDummies(requiredNumber = 3){
@@ -29,9 +30,10 @@ class QuestionWithDiagram extends Question{
         super(answer);
         super(dummy);
         this.diagram_info = diagram_info;
+        //Question.all.push(this); Is tihs super'd?
     }
 }
-
+Question.all = []
 //blank question -- Great for quick testing
 const blank = new Question(
     "If the population of bobcats decreases, what will most likely be the long-term effect on the rabbit population?", "It will increase and then decrease.",

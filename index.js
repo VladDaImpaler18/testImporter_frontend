@@ -1,3 +1,14 @@
+//fetch data create objects
+//categories
+fetch("http://localhost:3000/categories")
+    .then(response => response.json())
+    .then(newCategoryObj => new Category(newCategoryObj));
+
+//questions
+fetch("http://localhost:3000/questions")
+    .then(response => response.json())
+    .then(newQuestionObj => new Question(newQuestionObj));
+
 
 document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("submit", (e) => {
