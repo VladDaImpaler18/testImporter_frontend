@@ -2,7 +2,7 @@
 //categories
 fetch("http://localhost:3000/categories")
     .then(response => response.json())
-    .then(newCategoryObjs => Category.import(newCategoryObjs)); //returns an array holding an object
+    .then(newCategoryObjs => Category.import(newCategoryObjs)); //returns an array that contains the objects
 
 //questions
 fetch("http://localhost:3000/questions")
@@ -31,13 +31,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Error in send");
                 console.log(error.message);
             });
-        //send data as POST to backend controller
-        //data is all the input forms with proper labels and 
-        // a correct amount of dummy answers
+
     }
+
     
     })
 
+    document.addEventListener("click", (e) =>{
+        const categories = [...document.getElementsByName("categories")];
+        if(categories.some( category => category.getAttribute("value") === e.target.getAttribute("value")))
+        {
+            const categoryInput = document.querySelector("input#category");
+            categoryInput.setAttribute("value", `${e.target.getAttribute("value")}`);
+        }
+    })
 })
 
 function formToParams(form_element){
@@ -57,6 +64,7 @@ function formToParams(form_element){
 
 // End of Dom Loaded
 function loadForm(){
+
     const div = document.createElement("DIV");
           div.class = "formContainer";
           div.id = "div-for-question";
@@ -77,8 +85,9 @@ function loadForm(){
           dropdownContent.class = "dropdown-content";
     Category.all.forEach( category => {
         const row = document.createElement("P");
-              row.setAttribute("value", `${category.title}`)
+              row.setAttribute("value", `${category.title}`);
               row.innerText = `${category.title}`;
+              row.setAttribute("name", "categories");
         dropdownContent.appendChild(row);
     });
     divDropdown.appendChild(dropdownContent);
