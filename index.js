@@ -2,12 +2,12 @@
 //categories
 fetch("http://localhost:3000/categories")
     .then(response => response.json())
-    .then(newCategoryObj => new Category(newCategoryObj));
+    .then(newCategoryObjs => Category.import(newCategoryObjs)); //returns an array holding an object
 
 //questions
 fetch("http://localhost:3000/questions")
     .then(response => response.json())
-    .then(newQuestionObj => new Question(newQuestionObj));
+    .then(newQuestionObjs => Question.import(newQuestionObjs));
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -59,18 +59,45 @@ function formToParams(form_element){
 function loadForm(){
     const div = document.createElement("DIV");
           div.class = "formContainer";
+          div.id = "div-for-question";
+    
+    const divDropdown = document.createElement("DIV");
+          divDropdown.class = "dropdown";
+          divDropdown.id = "div-for-category";
+
+    document.body.appendChild(divDropdown);
+
+    const categoryInput = makeLabeledInput("category");
+          categoryInput.querySelector("input").setAttribute("placeholder","Click here or begin typing");
+    
+    divDropdown.appendChild(categoryInput);
+
+    const dropdownContent = document.createElement("DIV");
+          dropdownContent.id = "dropdown";
+          dropdownContent.class = "dropdown-content";
+    Category.all.forEach( category => {
+        const row = document.createElement("P");
+              row.setAttribute("value", `${category.title}`)
+              row.innerText = `${category.title}`;
+        dropdownContent.appendChild(row);
+    });
+    divDropdown.appendChild(dropdownContent);
+
+
+
     document.body.appendChild(div);
 
     const form = document.createElement("FORM");
           form.id="add-question-form"
           form.class = "add-question-form";
-    document.body.appendChild(form);
+        div.appendChild(form);
     const formItems = ["question", "answer", ["dummy", "dummy", "dummy"]]; //not a great way but it'll do for now.
     //create part to upload diagram
     //create that part with eventListener that makes a Labeled Input for the diagram_info
     //if param[diagram_info] && object.diagram.attached? Then make the object in javascript using the right class
     
-    //diagamInput
+    //diagamInput stuff
+
     formItems.forEach( item => makeAdditionalInput(item) );
 
     const submitBtn = document.createElement("BUTTON");
