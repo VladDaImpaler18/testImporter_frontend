@@ -53,21 +53,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function formToParams(form_element){
     const params = {};
-    const question = {};
     const dummies = [];
     let inputFields = form_element.querySelectorAll("input");
     inputFields.forEach( element => { 
         if(element.value){ 
             if(element.name === "dummies") { return dummies.push(element.value); }
-            else if(element.name === "category"){ return params[element.name] = element.value; }
-            else { return question[element.name] = element.value; }
+            else { return params[element.name] = element.value; }
         }
-    
     });
-    question["dummy"] = dummies;
-
-    console.log(`Question Obj: ${question}`);
-    console.log(`Final Params: ${params}`);
+    params["dummy"] = dummies;
     return params;
 }
 
@@ -81,8 +75,6 @@ function loadForm(){
     const divDropdown = document.createElement("DIV");
           divDropdown.class = "dropdown";
           divDropdown.id = "div-for-category";
-
-    document.body.appendChild(divDropdown);
 
     const categoryInput = makeLabeledInput("category");
           categoryInput.querySelector("input").setAttribute("placeholder","Click here or begin typing");
@@ -114,6 +106,7 @@ function loadForm(){
     //create that part with eventListener that makes a Labeled Input for the diagram_info
     //if param[diagram_info] && object.diagram.attached? Then make the object in javascript using the right class
     
+    form.appendChild(divDropdown);    
     //diagamInput stuff
 
     formItems.forEach( item => makeAdditionalInput(item) );
