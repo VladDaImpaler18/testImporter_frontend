@@ -32,12 +32,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log(error.message);
             });
 
-    }
-
-    
+        }
     })
 
     document.addEventListener("click", (e) =>{
+        const dropdownContent = document.getElementById("dropdownActual");
+        if(e.target === dropdownContent){
+            dropdownContent.classList.toggle("show");
+        }
+        
+        
         const categories = [...document.getElementsByName("categories")];
         if(categories.some( category => category.getAttribute("value") === e.target.getAttribute("value")))
         {
@@ -49,16 +53,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function formToParams(form_element){
     const params = {};
+    const question = {};
     const dummies = [];
     let inputFields = form_element.querySelectorAll("input");
     inputFields.forEach( element => { 
         if(element.value){ 
             if(element.name === "dummies") { return dummies.push(element.value); }
-            else { return params[element.id] = element.value; }
+            else if(element.name === "category"){ return params[element.name] = element.value; }
+            else { return question[element.name] = element.value; }
         }
     
     });
-    params["dummy"] = dummies;
+    question["dummy"] = dummies;
+
+    console.log(`Question Obj: ${question}`);
+    console.log(`Final Params: ${params}`);
     return params;
 }
 
@@ -81,7 +90,7 @@ function loadForm(){
     divDropdown.appendChild(categoryInput);
 
     const dropdownContent = document.createElement("DIV");
-          dropdownContent.id = "dropdown";
+          dropdownContent.id = "dropdownActual";
           dropdownContent.class = "dropdown-content";
     Category.all.forEach( category => {
         const row = document.createElement("P");
