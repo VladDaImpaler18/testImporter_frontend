@@ -4,7 +4,6 @@ const URL = "http://localhost:3000";
 Category.fetch(URL);
 //questions
 Question.fetch(URL);
-
 document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -29,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
     })
-
+    /* click category for auto-complete
     document.addEventListener("click", (e) =>{
         const dropdownContent = document.getElementById("dropdownActual");
         if(e.target === dropdownContent){
@@ -44,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
             categoryInput.setAttribute("value", `${e.target.getAttribute("value")}`);
         }
     })
+    */
 })
 
 function formToParams(form_element){
@@ -63,6 +63,7 @@ function formToParams(form_element){
 
 // End of Dom Loaded
 function loadForm(){
+    const categories = [...Category.all];
 
     const div = document.createElement("DIV");
           div.class = "formContainer";
@@ -71,23 +72,28 @@ function loadForm(){
     document.body.appendChild(div);
 
     const form = document.createElement("FORM");
-          form.id="add-question-form"
-          form.class = "add-question-form";
+          form.id="add-question-form";
+          form.setAttribute("autocomplete", "off");
     div.appendChild(form);
 
 
     
     const formItems = ["question", "answer", ["dummy", "dummy", "dummy"]]; //not a great way but it'll do for now.
     
-    const category = document.createElement("LABEL");
-          category.setAttribute("for", "my-autocomplete");
-          category.setAttribute("value", "Select category");
+    const category = document.createElement("DIV");
+          category.setAttribute("class", "autocomplete");
+          category.setAttribute("style", "width:300px;");
 
-    const categoryContent = document.createElement("DIV");
-          categoryContent.setAttribute("id","my-autocomplete-container");
+    const categoryInput = document.createElement("INPUT");
+          categoryInput.setAttribute("id", "categoryInput");
+          categoryInput.setAttribute("type", "text");
+          categoryInput.setAttribute("name", "myCategory");
+          categoryInput.setAttribute("placeholder", "Category");
+
+    category.appendChild(categoryInput);
     form.appendChild(category);
-    form.appendChild(categoryContent);
- 
+    
+    autocomplete(document.getElementById("categoryInput"), categories);
     //create part to upload diagram
     //create that part with eventListener that makes a Labeled Input for the diagram_info
     //if param[diagram_info] && object.diagram.attached? Then make the object in javascript using the right class
