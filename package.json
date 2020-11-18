@@ -1,0 +1,25 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Package for frontend",
+  "main": "index.js",
+  "dependencies": {
+    "accessible-autocomplete": "^2.0.3"
+  },
+  "devDependencies": {
+    "rollup": "^2.33.3"
+  },
+  "scripts": {
+    "test": "echo 'Hello World!'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladDaImpaler18/testImporter_frontend.git"
+  },
+  "author": "Vladimir",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VladDaImpaler18/testImporter_frontend/issues"
+  },
+  "homepage": "https://github.com/VladDaImpaler18/testImporter_frontend#readme"
+}

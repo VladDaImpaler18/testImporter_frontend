@@ -31,6 +31,21 @@ class Question {
             return new Question(elementObj.question, elementObj.answer, elementObj.dummy);
         });
     }
+    
+    static fetch(url,id){
+        //url = http://localhost:3000
+        if(id){ 
+            fetch(`${url}/questions/${id}`)
+            .then(response => response.json())
+            .then(newCategoryObjs => Category.import(newCategoryObjs)); //returns an array that contains the objects
+            }
+        else {
+            fetch(`${url}/questions`)
+            .then(response => response.json())
+            .then(newCategoryObjs => Category.import(newCategoryObjs)); //returns an array that contains the objects
+            }
+        
+        }
 }
 
 Question.all = []

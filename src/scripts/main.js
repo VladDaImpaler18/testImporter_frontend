@@ -1,14 +1,9 @@
+const URL = "http://localhost:3000";
 //fetch data create objects
 //categories
-fetch("http://localhost:3000/categories")
-    .then(response => response.json())
-    .then(newCategoryObjs => Category.import(newCategoryObjs)); //returns an array that contains the objects
-
+Category.fetch(URL);
 //questions
-fetch("http://localhost:3000/questions")
-    .then(response => response.json())
-    .then(newQuestionObjs => Question.import(newQuestionObjs));
-
+Question.fetch(URL);
 
 document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("submit", (e) => {
@@ -62,6 +57,7 @@ function formToParams(form_element){
         }
     });
     params["dummy"] = dummies;
+    debugger;
     return params;
 }
 
@@ -72,41 +68,31 @@ function loadForm(){
           div.class = "formContainer";
           div.id = "div-for-question";
     
-    const divDropdown = document.createElement("DIV");
-          divDropdown.class = "dropdown";
-          divDropdown.id = "div-for-category";
-
-    const categoryInput = makeLabeledInput("category");
-          categoryInput.querySelector("input").setAttribute("placeholder","Click here or begin typing");
-    
-    divDropdown.appendChild(categoryInput);
-
-    const dropdownContent = document.createElement("DIV");
-          dropdownContent.id = "dropdownActual";
-          dropdownContent.class = "dropdown-content";
-    Category.all.forEach( category => {
-        const row = document.createElement("P");
-              row.setAttribute("value", `${category.title}`);
-              row.innerText = `${category.title}`;
-              row.setAttribute("name", "categories");
-        dropdownContent.appendChild(row);
-    });
-    divDropdown.appendChild(dropdownContent);
-
-
-
     document.body.appendChild(div);
 
     const form = document.createElement("FORM");
           form.id="add-question-form"
           form.class = "add-question-form";
-        div.appendChild(form);
+    div.appendChild(form);
+
+
+    
     const formItems = ["question", "answer", ["dummy", "dummy", "dummy"]]; //not a great way but it'll do for now.
+    
+    const category = document.createElement("LABEL");
+          category.setAttribute("for", "my-autocomplete");
+          category.setAttribute("value", "Select category");
+
+    const categoryContent = document.createElement("DIV");
+          categoryContent.setAttribute("id","my-autocomplete-container");
+    form.appendChild(category);
+    form.appendChild(categoryContent);
+ 
     //create part to upload diagram
     //create that part with eventListener that makes a Labeled Input for the diagram_info
     //if param[diagram_info] && object.diagram.attached? Then make the object in javascript using the right class
     
-    form.appendChild(divDropdown);    
+  
     //diagamInput stuff
 
     formItems.forEach( item => makeAdditionalInput(item) );
@@ -116,6 +102,12 @@ function loadForm(){
     submitBtn.setAttribute("id", "submitButton");
     form.appendChild(submitBtn);
 
+    function handleInput(e) {
+        const dropdownContent = document.getElementById("dropdownActual");
+        let filtered = dropdownContent;
+        //https://www.w3schools.com/howto/howto_js_filter_lists.asp
+        //https://www.w3schools.com/howto/howto_js_autocomplete.asp
+    }
 
     function makeAdditionalInput(item){
         if(Array.isArray(item)){
