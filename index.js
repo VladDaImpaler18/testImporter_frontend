@@ -1,11 +1,24 @@
 const URL = "http://localhost:3000";
+var catArr = [];
 //fetch data create objects
+
 //categories
 Category.fetch(URL);
 //questions
 Question.fetch(URL);
+Category.all.forEach(categoryObj => {
+    if(categoryObj.title){ 
+        console.log(`I put in value ${categoryObj.title}`);
+        catArr.push(categoryObj.title);
+    }
+    
+});
+console.log(catArr);
+
 document.addEventListener("DOMContentLoaded", () => {
+    
     document.addEventListener("submit", (e) => {
+        debugger;
         e.preventDefault();
         if(e.submitter === document.getElementById("submitButton")) {
             let form = e.target;
@@ -27,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
         }
-    })
+    });
     /* click category for auto-complete
     document.addEventListener("click", (e) =>{
         const dropdownContent = document.getElementById("dropdownActual");
@@ -44,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
     */
-})
+});
 
 function formToParams(form_element){
     const params = {};
@@ -57,13 +70,11 @@ function formToParams(form_element){
         }
     });
     params["dummy"] = dummies;
-    debugger;
     return params;
 }
 
 // End of Dom Loaded
 function loadForm(){
-    const categories = [...Category.all];
 
     const div = document.createElement("DIV");
           div.class = "formContainer";
@@ -92,8 +103,7 @@ function loadForm(){
 
     category.appendChild(categoryInput);
     form.appendChild(category);
-    
-    autocomplete(document.getElementById("categoryInput"), categories);
+     
     //create part to upload diagram
     //create that part with eventListener that makes a Labeled Input for the diagram_info
     //if param[diagram_info] && object.diagram.attached? Then make the object in javascript using the right class
@@ -107,13 +117,6 @@ function loadForm(){
     submitBtn.innerText = "Submit";
     submitBtn.setAttribute("id", "submitButton");
     form.appendChild(submitBtn);
-
-    function handleInput(e) {
-        const dropdownContent = document.getElementById("dropdownActual");
-        let filtered = dropdownContent;
-        //https://www.w3schools.com/howto/howto_js_filter_lists.asp
-        //https://www.w3schools.com/howto/howto_js_autocomplete.asp
-    }
 
     function makeAdditionalInput(item){
         if(Array.isArray(item)){
@@ -182,6 +185,7 @@ function loadForm(){
         node.appendChild(inputText);
         return node;
     }
-       
+     
+    autocomplete(document.getElementById("categoryInput"), catArr);
 }
 
