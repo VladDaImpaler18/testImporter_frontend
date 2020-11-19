@@ -4,7 +4,6 @@ class Question {
         this.answer = answer;
         this.dummy = dummy;
         this.diagram_info = diagram_info;
-        Question.all.push(this);
     }
 
     pickDummies(requiredNumber = 3){
@@ -27,22 +26,26 @@ class Question {
 
     static import(questionObjs){ //[{}, {}, {}]
         questionObjs.forEach(elementObj => {
-            if(elementObj.diagram_info){ return new Question(elementObj.question, elementObj.answer, elementObj.dummy, elementObj.diagram_info); }
-            return new Question(elementObj.question, elementObj.answer, elementObj.dummy);
+            if(elementObj.question){
+                    const q = new Question(elementObj.question, elementObj.answer, elementObj.dummy, elementObj.diagram_info); 
+                    Question.all.push(q);
+                    return q;
+            }
         });
     }
+
     
     static fetch(url,id){
         //url = http://localhost:3000
         if(id){ 
             fetch(`${url}/questions/${id}`)
             .then(response => response.json())
-            .then(newCategoryObjs => Category.import(newCategoryObjs)); //returns an array that contains the objects
+            .then(newQuestionObjs => Question.import(newQuestionObjs)); //returns an array that contains the objects
             }
         else {
             fetch(`${url}/questions`)
             .then(response => response.json())
-            .then(newCategoryObjs => Category.import(newCategoryObjs)); //returns an array that contains the objects
+            .then(newQuestionObjs => Question.import(newQuestionObjs)); //returns an array that contains the objects
             }
         
         }

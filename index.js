@@ -1,24 +1,23 @@
 const URL = "http://localhost:3000";
-var catArr = [];
 //fetch data create objects
 
 //categories
 Category.fetch(URL);
 //questions
 Question.fetch(URL);
-Category.all.forEach(categoryObj => {
+/*getCategories = () => {Category.all.forEach(categoryObj => {
     if(categoryObj.title){ 
         console.log(`I put in value ${categoryObj.title}`);
         catArr.push(categoryObj.title);
     }
     
-});
-console.log(catArr);
+})
+};
+*/
 
 document.addEventListener("DOMContentLoaded", () => {
     
     document.addEventListener("submit", (e) => {
-        debugger;
         e.preventDefault();
         if(e.submitter === document.getElementById("submitButton")) {
             let form = e.target;
@@ -58,7 +57,19 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     */
 });
+// End of Dom Loaded
+// Load selector
+function clear(){
+    document.body.innerHTML="";
+    console.log("Cleared");
+}
 
+function loadShow()
+{
+    clear();
+}
+
+//Form class?
 function formToParams(form_element){
     const params = {};
     const dummies = [];
@@ -73,8 +84,9 @@ function formToParams(form_element){
     return params;
 }
 
-// End of Dom Loaded
+
 function loadForm(){
+    clear();
 
     const div = document.createElement("DIV");
           div.class = "formContainer";
@@ -186,6 +198,7 @@ function loadForm(){
         return node;
     }
      
-    autocomplete(document.getElementById("categoryInput"), catArr);
+    autocomplete(document.getElementById("categoryInput"), Category.all);
 }
-
+//end of form class?
+loadForm();
