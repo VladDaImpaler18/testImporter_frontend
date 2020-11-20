@@ -8,7 +8,26 @@ Category.fetch(URL);
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    
+    document.addEventListener("click", (e) =>{
+        //if user clicks on category do something
+        //if(document.querySelectorAll()===e.target){
+
+        //}
+        
+        
+        
+        
+        //if user clicks ANYWHERE ELSE, nothing happens. When user clicks this specific spot, things happen
+        if(e.target != document.querySelector(".dropbtn")){
+            let dropdowns = document.getElementsByClassName("dropdown-content");
+            for(let i = 0; i < dropdowns.length; i++){
+                const openDropdown = dropdowns[i];
+                if(openDropdown.classList.contains('show')) { openDropdown.classList.remove('show'); }
+
+            }
+        }
+    });
+
     document.addEventListener("submit", (e) => {
         e.preventDefault();
         if(e.submitter === document.getElementById("submitButton")) {
@@ -40,24 +59,48 @@ function clear(){
     console.log("Cleared");
 }
 
-function loadShow(modelObj)
+function loadShow() //KISS will only do Question for now. It shows all the questions with a dropdown at top, dropdown filters questions
 {
     clear();
     //create dropdown with categories at top to filter default: all
-    //show all questions || Show filtered results
+    const dropdownNode = document.createElement("DIV");
+          dropdownNode.setAttribute("class", "dropdown");
     
+    const btn = document.createElement("BUTTON");
+          btn.innerText = "Category Filter";
+          btn.setAttribute("class", "dropbtn");
+          btn.addEventListener("click", (e) => document.getElementById("myDropdown").classList.toggle("show"));
+    
+    const dropdownContent = document.createElement("DIV");
+          dropdownContent.setAttribute("id", "myDropdown");
+          dropdownContent.setAttribute("class", "dropdown-content");
+    
+    //create content for div, links
 
+    dropdownNode.appendChild(btn);
+    dropdownNode.appendChild(dropdownContent);
+    document.body.appendChild(dropdownNode);
+    
+    //show all questions || Show filtered results
+    Category.all.forEach( category => {
+        let c = document.createElement("A");
+        c.setAttribute("href","#");
+        c.setAttribute("name", "categories");
+        c.setAttribute("value", category);
+        c.innerText = category;
+        dropdownContent.appendChild(c)
+    });
+    //setAttribute("name", "categories")
     //check if it's a specific object (show), or all of them (index)
 
     //model must be object with properties(keys)
-    const labels = Object.keys(modelObj);
+    const labels = Object.keys(new Question);
     //properties(keys) will create labels
     //input fields will have the values
     //OKAY button on bottom
     //if values have changed, turn OKAY button transforms to SAVE, and add RED CANCEL button
     //if CANCEL revert changes and button becomes OKAY again
     //if SAVE do fetch with PATCH method, save to backend (assuming validations pass)
-    debugger;
 
 }
 
@@ -90,9 +133,7 @@ function loadForm(){
           form.id="add-question-form";
           form.setAttribute("autocomplete", "off");
     div.appendChild(form);
-
-
-    
+  
     const formItems = ["question", "answer", ["dummy", "dummy", "dummy"]]; //not a great way but it'll do for now.
     
     const category = document.createElement("DIV");
@@ -110,7 +151,7 @@ function loadForm(){
      
     //create part to upload diagram
     //create that part with eventListener that makes a Labeled Input for the diagram_info
-    //if param[diagram_info] && object.diagram.attached? Then make the object in javascript using the right class
+    //if param[diagram_info] && object.diagram.attached? 
     
   
     //diagamInput stuff
