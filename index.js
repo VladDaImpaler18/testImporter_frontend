@@ -52,7 +52,6 @@ function loadShow(modelObj)
     //model must be object with properties(keys)
     const labels = Object.keys(modelObj);
     //properties(keys) will create labels
-    makeLabeledInput
     //input fields will have the values
     //OKAY button on bottom
     //if values have changed, turn OKAY button transforms to SAVE, and add RED CANCEL button
