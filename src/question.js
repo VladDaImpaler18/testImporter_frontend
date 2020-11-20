@@ -24,10 +24,11 @@ class Question {
         
     }
 
-    static import(questionObjs){ //[{}, {}, {}]
+    static import(questionObjs,category){ //[{}, {}, {}]
         questionObjs.forEach(elementObj => {
             if(elementObj.question){
                     const q = new Question(elementObj.question, elementObj.answer, elementObj.dummy, elementObj.diagram_info); 
+                    if(category){q.category = category;}
                     Question.all.push(q);
                     return q;
             }
@@ -49,6 +50,15 @@ class Question {
             }
         
         }
+    
+    static find_by(key, inquery){ //probably doesn't matter on case sensitivity, will be all auto-inputted
+        key = key.toLowerCase();
+        inquery = inquery.toLowerCase();
+        let result = Question.all.filter( question => question[key].toLowerCase() === inquery );
+        if(result.length === 1){ result = result[0]; } //if it finds a single thing it returns it instead of array
+        if(result.length === 0){ return false; }
+        else{ return result; }
+    }
 }
 
 Question.all = []

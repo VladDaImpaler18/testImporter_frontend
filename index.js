@@ -3,17 +3,9 @@ const URL = "http://localhost:3000";
 
 //categories
 Category.fetch(URL);
-//questions
-Question.fetch(URL);
-/*getCategories = () => {Category.all.forEach(categoryObj => {
-    if(categoryObj.title){ 
-        console.log(`I put in value ${categoryObj.title}`);
-        catArr.push(categoryObj.title);
-    }
-    
-})
-};
-*/
+//questions -- no longer need to do this questions are populated through Category
+//Question.fetch(URL);
+
 
 document.addEventListener("DOMContentLoaded", () => {
     
@@ -40,22 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
     });
-    /* click category for auto-complete
-    document.addEventListener("click", (e) =>{
-        const dropdownContent = document.getElementById("dropdownActual");
-        if(e.target === dropdownContent){
-            dropdownContent.classList.toggle("show");
-        }
-        
-        
-        const categories = [...document.getElementsByName("categories")];
-        if(categories.some( category => category.getAttribute("value") === e.target.getAttribute("value")))
-        {
-            const categoryInput = document.querySelector("input#category");
-            categoryInput.setAttribute("value", `${e.target.getAttribute("value")}`);
-        }
-    })
-    */
 });
 // End of Dom Loaded
 // Load selector
@@ -64,9 +40,26 @@ function clear(){
     console.log("Cleared");
 }
 
-function loadShow()
+function loadShow(modelObj)
 {
     clear();
+    //create dropdown with categories at top to filter default: all
+    //show all questions || Show filtered results
+    
+
+    //check if it's a specific object (show), or all of them (index)
+
+    //model must be object with properties(keys)
+    const labels = Object.keys(modelObj);
+    //properties(keys) will create labels
+    makeLabeledInput
+    //input fields will have the values
+    //OKAY button on bottom
+    //if values have changed, turn OKAY button transforms to SAVE, and add RED CANCEL button
+    //if CANCEL revert changes and button becomes OKAY again
+    //if SAVE do fetch with PATCH method, save to backend (assuming validations pass)
+    debugger;
+
 }
 
 //Form class?
