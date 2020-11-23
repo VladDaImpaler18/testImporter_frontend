@@ -10,12 +10,20 @@ Category.fetch(URL);
 document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("click", (e) =>{
         //if user clicks on category do something
-        //if(document.querySelectorAll()===e.target){
-
-        //}
-        
-        
-        
+        if(e.target.name === "categories"){
+            let filteredCategory = e.target.getAttribute("value");
+            let listOfQuestions = document.getElementById("questionsList").childNodes
+            listOfQuestions.forEach( p => { 
+                if(filteredCategory != "All" && p.getAttribute("name") != filteredCategory){p.style.display = "none";}//hides questions UNLESS All is selected
+                else{p.style.display = "";}//shows
+            })
+        }
+        //if user clicks on question, show page (and editable parts) appear
+        if(e.target.parentElement.id === "questionsList"){
+            let chosenQuestion = e.target.innerHTML;
+            qChoiceObj = Question.find_by("question", chosenQuestion);
+            loadEditPage(qChoiceObj);
+        }
         
         //if user clicks ANYWHERE ELSE, nothing happens. When user clicks this specific spot, things happen
         if(e.target != document.querySelector(".dropbtn")){
@@ -58,8 +66,13 @@ function clear(){
     document.body.innerHTML="";
     console.log("Cleared");
 }
+function loadEditPage(questionObj){
+    clear();
+    console.log("show page ENABLED!");
+}
 
-function loadShow() //KISS will only do Question for now. It shows all the questions with a dropdown at top, dropdown filters questions
+
+function loadQuestionList() //KISS will only do Question for now. It shows all the questions with a dropdown at top, dropdown filters questions
 {
     clear();
     //create dropdown with categories at top to filter default: all
@@ -81,6 +94,13 @@ function loadShow() //KISS will only do Question for now. It shows all the quest
     dropdownNode.appendChild(dropdownContent);
     document.body.appendChild(dropdownNode);
     
+    let filterNone = document.createElement("A");
+        filterNone.setAttribute("href","#");
+        filterNone.setAttribute("name", "categories");
+        filterNone.setAttribute("value", "All");
+        filterNone.innerText = "Show All";
+    dropdownContent.appendChild(filterNone);
+
     //show all questions || Show filtered results
     Category.all.forEach( category => {
         let c = document.createElement("A");
@@ -93,6 +113,7 @@ function loadShow() //KISS will only do Question for now. It shows all the quest
 
     //div that is results
     let questionDiv = document.createElement("DIV");
+        questionDiv.setAttribute("id", "questionsList");
     Question.all.forEach( question => {
         let q = document.createElement("P");
         q.setAttribute("name", question.category);
@@ -101,13 +122,15 @@ function loadShow() //KISS will only do Question for now. It shows all the quest
     })
     document.body.appendChild(questionDiv);
 
-    //document.getElementsByName("Ecology")[1].style.display = "none" //hides
-    
-    //check if it's a specific object (show), or all of them (index)
-
-    //model must be object with properties(keys)
+    /***Plan B***
     const labels = Object.keys(new Question);
-    //properties(keys) will create labels
+    properties(keys) will create labels
+    */
+
+    //Question list appears, can be filtered by Category.
+    //When question is clicked, grab the inner text and search for that question.
+    //Show page is editable and shows just that question that has pulled...continue with rest of idea below
+
     //input fields will have the values
     //OKAY button on bottom
     //if values have changed, turn OKAY button transforms to SAVE, and add RED CANCEL button
@@ -246,4 +269,4 @@ function loadForm(){
     autocomplete(document.getElementById("categoryInput"), Category.all);
 }
 //end of form class?
-loadForm();
+loadQuestionList();
