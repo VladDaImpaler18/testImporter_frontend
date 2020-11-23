@@ -90,7 +90,19 @@ function loadShow() //KISS will only do Question for now. It shows all the quest
         c.innerText = category;
         dropdownContent.appendChild(c)
     });
-    //setAttribute("name", "categories")
+
+    //div that is results
+    let questionDiv = document.createElement("DIV");
+    Question.all.forEach( question => {
+        let q = document.createElement("P");
+        q.setAttribute("name", question.category);
+        q.innerText = question.question;
+        questionDiv.appendChild(q);
+    })
+    document.body.appendChild(questionDiv);
+
+    //document.getElementsByName("Ecology")[1].style.display = "none" //hides
+    
     //check if it's a specific object (show), or all of them (index)
 
     //model must be object with properties(keys)
