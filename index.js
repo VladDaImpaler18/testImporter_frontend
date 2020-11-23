@@ -69,6 +69,59 @@ function clear(){
 function loadEditPage(questionObj){
     clear();
     console.log("show page ENABLED!");
+    
+    const labels = Object.keys(questionObj);
+    labels.forEach( row => {
+        if(row != "dummy") { document.body.appendChild(makeLabeledInput(row)); }
+        else {
+            for(let d = 0; d < row.length; d++){
+                document.body.appendChild(makeLabeledInput(row,d));
+            }
+        }
+    });
+
+
+
+    //properties(keys) will create labels
+
+    //Question list appears, can be filtered by Category.
+    //When question is clicked, grab the inner text and search for that question.
+    //Show page is editable and shows just that question that has pulled...continue with rest of idea below
+
+    //input fields will have the values
+    //OKAY button on bottom
+    //if values have changed, turn OKAY button transforms to SAVE, and add RED CANCEL button
+    //if CANCEL revert changes and button becomes OKAY again
+    //if SAVE do fetch with PATCH method, save to backend (assuming validations pass)
+    
+    //I NEED TO DRY THIS -- possibly allow loadForm take a questionObj parameter to render a show\edit form (instead of an input form)
+    //Or I make it so it always has to pass a questionObj, and if it's created in javascript it's values would be empty vs getting it from the backend
+    function makeLabeledInput(item,number = false){ //this still has to create values to fill in the data.
+        let node = document.createElement("P");
+        let inputLabel = document.createElement("LABEL");
+            inputLabel.setAttribute("value", `${item}:`);
+            inputLabel.setAttribute("class", "capitalize");
+        let inputText = document.createElement("INPUT")
+            inputText.setAttribute("type", "text");
+            if(number) {
+                inputLabel.innerText=`${item}-${number}: `;
+                inputLabel.setAttribute("for", `${item}-${number}`); 
+                inputText.setAttribute("name", `${item}-${number}`);
+                inputText.setAttribute("id", `${item}-${number}`);
+            }
+            else { 
+                inputLabel.innerText=`${item}: `;
+                inputLabel.setAttribute("for", `${item}`);
+                inputText.setAttribute("name", `${item}`);
+                inputText.setAttribute("id", `${item}`);
+    
+            }
+        if(item === "dummy"){ inputText.setAttribute("name", "dummies"); } // document.getElementsByName("dummies") for array of dummies
+            
+        node.appendChild(inputLabel);
+        node.appendChild(inputText);
+        return node;
+    }
 }
 
 
@@ -121,21 +174,6 @@ function loadQuestionList() //KISS will only do Question for now. It shows all t
         questionDiv.appendChild(q);
     })
     document.body.appendChild(questionDiv);
-
-    /***Plan B***
-    const labels = Object.keys(new Question);
-    properties(keys) will create labels
-    */
-
-    //Question list appears, can be filtered by Category.
-    //When question is clicked, grab the inner text and search for that question.
-    //Show page is editable and shows just that question that has pulled...continue with rest of idea below
-
-    //input fields will have the values
-    //OKAY button on bottom
-    //if values have changed, turn OKAY button transforms to SAVE, and add RED CANCEL button
-    //if CANCEL revert changes and button becomes OKAY again
-    //if SAVE do fetch with PATCH method, save to backend (assuming validations pass)
 
 }
 
