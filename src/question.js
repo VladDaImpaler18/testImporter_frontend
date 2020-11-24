@@ -6,13 +6,6 @@ class Question {
         this.category = category;
         this.diagram_info = diagram_info;
     }
-    isValid(){
-        Object.values(this).every(item => {
-            if(typeof item == typeof [] && item.length >= 3){ return true; }
-            if(this!=null){return true; }
-            return false;
-            })
-    }
     pickDummies(requiredNumber = 3){
         const chosenQuestions = [];
         let questionPool =  [...this.dummy]
@@ -110,13 +103,19 @@ class Question {
 
     static import(questionObjs,category){ //[{}, {}, {}]
         questionObjs.forEach(elementObj => {
-            if(elementObj.question){
-                    const q = new Question(elementObj.question, elementObj.answer, elementObj.dummy, category, elementObj.diagram_info); 
-                    //if(category){q.category = category;} //put this back if i broke something
-                    Question.all.push(q);
-                    return q;
-            }
+            Question.create(elementObj,category);
         });
+    }
+
+    static create(questionObj, category){
+        if(questionObj.question){
+            const q = new Question(questionObj.question, questionObj.answer, questionObj.dummy, questionObj.category||category); 
+            //if(questionObj.category){q.category = category;} //put this back if i broke something
+            if(questionObj.diagram_info){ q.diagram_info = questionObj.diagram_info }
+            Question.all.push(q);
+            return q;
+        }
+        else{ return false; }
     }
 
     
@@ -138,17 +137,14 @@ class Question {
     static find_by(key, inquery){ //probably doesn't matter on case sensitivity, will be all auto-inputted
         key = key.toLowerCase();
         inquery = inquery.toLowerCase();
-        let result = Question.all.filter( question => question[key].toLowerCase() === inquery );
-        if(result.length === 1){ result = result[0]; } //if it finds a single thing it returns it instead of array
-        if(result.length === 0){ return false; }
-        else{ return result; }
+        let result = Question.all.find( question => question[key].toLowerCase() === inquery );
+        return result;
     }
 }
 
-Question.all = []
-//blank question -- Great for quick testing
-const tester = new Question(
-    "If the population of bobcats decreases, what will most likely be the long-term effect on the rabbit population?", "It will increase and then decrease.",
+Question.all = [];
+//test & blank question -- Great for quick testing
+const tester = new Question("If the population of bobcats decreases, what will most likely be the long-term effect on the rabbit population?", "It will increase and then decrease.",
 ["It will increase, only.", "It will decrease, only.", "It will decrease and then increase."],"Biology", false);
 
 const blank = new Question;

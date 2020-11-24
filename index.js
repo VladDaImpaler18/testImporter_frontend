@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(e.target.parentElement.id === "questionsList"){
             let chosenQuestion = e.target.innerHTML;
             qChoiceObj = Question.find_by("question", chosenQuestion);
-            loadEditPage(qChoiceObj);
+            loadForm(qChoiceObj);
         }
         
         //if user clicks ANYWHERE ELSE, nothing happens. When user clicks this specific spot, things happen
