@@ -37,7 +37,23 @@ class Question {
             }
             else{
                 console.log("we aint dummies");
-                form.appendChild(createField(p,this[p] || null));
+                if(p==="category"){
+                    const category = document.createElement("DIV");
+                        category.setAttribute("class", "autocomplete");
+                        category.setAttribute("style", "width:300px;");
+
+                    const categoryInput = document.createElement("INPUT");
+                        categoryInput.setAttribute("id", "categoryInput");
+                        categoryInput.setAttribute("type", "text");
+                        categoryInput.setAttribute("name", "myCategory");
+                        categoryInput.setAttribute("placeholder", "Category");
+                        categoryInput.value = this[p] || null;
+                    
+                    category.appendChild(categoryInput);
+                    form.prepend(category);
+                    autocomplete(document.getElementById("categoryInput"), Category.all);
+                }
+                else{ form.appendChild(createField(p,this[p] || null)); }
              }
         });
 
@@ -99,7 +115,8 @@ class Question {
 
 Question.all = []
 //blank question -- Great for quick testing
-const blank = new Question(
+const tester = new Question(
     "If the population of bobcats decreases, what will most likely be the long-term effect on the rabbit population?", "It will increase and then decrease.",
-["It will increase, only.", "It will decrease, only.", "It will decrease and then increase."],false);
-      blank.category = "Biology";
+["It will increase, only.", "It will decrease, only.", "It will decrease and then increase."],"Biology", false);
+
+const blank = new Question;
