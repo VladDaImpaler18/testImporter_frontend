@@ -1,8 +1,9 @@
 class Question {
-    constructor(question, answer, dummy=[], diagram_info=false){
+    constructor(question, answer, dummy=[], category, diagram_info=false){
         this.question = question;
         this.answer = answer;
         this.dummy = dummy;
+        this.category = category;
         this.diagram_info = diagram_info;
     }
 
@@ -22,6 +23,41 @@ class Question {
         }
         return chosenQuestions;
         
+    }
+    renderLabels(form){
+        Object.keys(this).forEach( (p)=> { //this generates the labels for input fields
+            if(typeof this[p] === typeof []){//if an array
+                console.log(`we got dummies here. p = ${p}`);
+                if(this[p].length > 0){ this[p].forEach(dummyQ => { form.appendChild(createField(p, dummyQ)); }) }
+                else{ 
+                    form.appendChild(createField(p));
+                    form.appendChild(createField(p));
+                    form.appendChild(createField(p)); 
+                }
+            }
+            else{
+                console.log("we aint dummies");
+                form.appendChild(createField(p,this[p] || null));
+             }
+        });
+
+
+        function createField(label, value=null){
+            let node = document.createElement("P");
+            let inputLabel = document.createElement("LABEL");
+                inputLabel.setAttribute("value", `${value}:`);
+                inputLabel.setAttribute("class", "capitalize");
+                inputLabel.innerText=label;
+            let inputText = document.createElement("INPUT")
+                inputText.setAttribute("type", "text");
+                inputText.setAttribute("name", label);
+                inputText.setAttribute("id", label);
+                inputText.value=value;
+            if(label === "dummy"){ inputText.setAttribute("name", "dummies"); }
+            node.appendChild(inputLabel);
+            node.appendChild(inputText);
+            return node;
+        }
     }
 
     static import(questionObjs,category){ //[{}, {}, {}]
@@ -65,4 +101,5 @@ Question.all = []
 //blank question -- Great for quick testing
 const blank = new Question(
     "If the population of bobcats decreases, what will most likely be the long-term effect on the rabbit population?", "It will increase and then decrease.",
-["It will increase, only.", "It will decrease, only.", "It will decrease and then increase."])
+["It will increase, only.", "It will decrease, only.", "It will decrease and then increase."],false);
+      blank.category = "Biology";
