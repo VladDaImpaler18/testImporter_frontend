@@ -6,7 +6,13 @@ class Question {
         this.category = category;
         this.diagram_info = diagram_info;
     }
-
+    isValid(){
+        Object.values(this).every(item => {
+            if(typeof item == typeof [] && item.length >= 3){ return true; }
+            if(this!=null){return true; }
+            return false;
+            })
+    }
     pickDummies(requiredNumber = 3){
         const chosenQuestions = [];
         let questionPool =  [...this.dummy]
@@ -56,7 +62,33 @@ class Question {
                 else{ form.appendChild(createField(p,this[p] || null)); }
              }
         });
+        appendPlusButtonToDummies(form);
 
+        function appendPlusButtonToDummies(form){
+            let plusBtn = document.createElement("BUTTON");
+                plusBtn.innerText = "+";
+                plusBtn.setAttribute("id", "addButton");
+                plusBtn.addEventListener("click", (e) =>{
+                    let btn = e.target;
+                    let additionalRow = createField("dummy");
+                    let dummyInputs = Object.values(document.getElementsByName("dummies"));
+                    if (dummyInputs.every(input => input.value)){
+                        additionalRow.appendChild(btn);
+                        const diagram_info = document.getElementById("diagram_info").parentElement
+                        form.insertBefore(additionalRow, diagram_info);
+                        let submitBtn = document.getElementById("submitButton");
+                        submitBtn.parentElement.appendChild(submitBtn);
+                    }
+                    else{
+                        dummyInputs.forEach( input =>{
+                            if(!input.value){ input.placeholder = "Must have input before you can add another"; }
+                        })
+                    }
+                });
+            const lastIndex = document.getElementsByName("dummies").length-1;
+            let lastDummy = document.getElementsByName("dummies")[lastIndex];
+            lastDummy.parentElement.appendChild(plusBtn);
+        }
 
         function createField(label, value=null){
             let node = document.createElement("P");

@@ -67,32 +67,6 @@ function clear(){
     console.log("Cleared");
 }
 
-function loadEditPage(questionObj){
-    clear();
-    console.log("show page ENABLED!");
-    
-  
-    questionObj.renderLabels();
-
-    //properties(keys) will create labels
-
-    //Question list appears, can be filtered by Category.
-    //When question is clicked, grab the inner text and search for that question.
-    //Show page is editable and shows just that question that has pulled...continue with rest of idea below
-
-    //input fields will have the values
-    //OKAY button on bottom
-    //if values have changed, turn OKAY button transforms to SAVE, and add RED CANCEL button
-    //if CANCEL revert changes and button becomes OKAY again
-    //if SAVE do fetch with PATCH method, save to backend (assuming validations pass)
-    
-    //I NEED TO DRY THIS -- possibly allow loadForm take a questionObj parameter to render a show\edit form (instead of an input form)
-    //Or I make it so it always has to pass a questionObj, and if it's created in javascript it's values would be empty vs getting it from the backend
-
-
-}
-
-
 function loadQuestionList() //KISS will only do Question for now. It shows all the questions with a dropdown at top, dropdown filters questions
 {
     clear();
@@ -160,17 +134,34 @@ function formToParams(form_element){
     return params;
 }
 
-function loadForm2(questionObj){
+function loadForm(questionObj){
     clear();
     
     const form = document.createElement("FORM");
+          
           form.id="add-question-form";
           form.setAttribute("autocomplete", "off");
     document.body.appendChild(form);
+
+    //diagamInput stuff
+    //create that part with eventListener that makes a Labeled Input for the diagram_info
     questionObj.renderLabels(form)
+
+    const submitBtn = document.createElement("BUTTON");
+    submitBtn.innerText = "Submit";
+    submitBtn.setAttribute("id", "submitButton");
+    form.appendChild(submitBtn);
     //add submit button IF new obj
     //if editing, default is 'OK', if things change turn it to "save" and add a "cancel" button
+
+    //input fields will have the values
+    //OKAY button on bottom
+    //if values have changed, turn OKAY button transforms to SAVE, and add RED CANCEL button
+    //if CANCEL revert changes and button becomes OKAY again
+    //if SAVE do fetch with PATCH method, save to backend (assuming validations pass)
+
 }
+/* Legacy code
 function loadForm(){
     clear();
 
@@ -200,12 +191,7 @@ function loadForm(){
     category.appendChild(categoryInput);
     form.appendChild(category);
      
-    //create part to upload diagram
-    //create that part with eventListener that makes a Labeled Input for the diagram_info
-    //if param[diagram_info] && object.diagram.attached? 
-    
-  
-    //diagamInput stuff
+
 
     formItems.forEach( item => makeAdditionalInput(item) );
 
@@ -283,6 +269,4 @@ function loadForm(){
     }
      
     autocomplete(document.getElementById("categoryInput"), Category.all);
-}
-//end of form class?
-loadQuestionList();
+}*/
