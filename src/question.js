@@ -79,8 +79,8 @@ class Question {
     static import(questionObjs,category){ //[{}, {}, {}]
         questionObjs.forEach(elementObj => {
             if(elementObj.question){
-                    const q = new Question(elementObj.question, elementObj.answer, elementObj.dummy, elementObj.diagram_info); 
-                    if(category){q.category = category;}
+                    const q = new Question(elementObj.question, elementObj.answer, elementObj.dummy, category, elementObj.diagram_info); 
+                    //if(category){q.category = category;} //put this back if i broke something
                     Question.all.push(q);
                     return q;
             }

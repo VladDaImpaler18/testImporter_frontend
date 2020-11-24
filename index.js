@@ -168,6 +168,8 @@ function loadForm2(questionObj){
           form.setAttribute("autocomplete", "off");
     document.body.appendChild(form);
     questionObj.renderLabels(form)
+    //add submit button IF new obj
+    //if editing, default is 'OK', if things change turn it to "save" and add a "cancel" button
 }
 function loadForm(){
     clear();
