@@ -44,7 +44,7 @@ class Question {
                     const categoryInput = document.createElement("INPUT");
                         categoryInput.setAttribute("id", "categoryInput");
                         categoryInput.setAttribute("type", "text");
-                        categoryInput.setAttribute("name", "myCategory");
+                        categoryInput.setAttribute("name", "category");
                         categoryInput.setAttribute("placeholder", "Category");
                         categoryInput.value = this[p] || null;
                     

@@ -18,6 +18,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 else{p.style.display = "";}//shows
             })
         }
+        //if user clicks on navbar link do something
+        if(e.target.parentElement.id === "navbar")
+        {
+            //const selection = e.target.name; //create, show, about
+            //if(selection==="create"){loadForm(new Question);}
+            switch(e.target.name){
+                case "create":
+                    console.log("CREATE!");
+                    loadForm(new Question)
+                    break;
+                case "show":
+                    console.log("SHOW!");
+                    loadQuestionList();
+                    break;
+                case "about":
+                    console.log("ABOUT!");
+                    break;
+            }
+        }
         //if user clicks on question, show page (and editable parts) appear
         if(e.target.parentElement.id === "questionsList"){
             let chosenQuestion = e.target.innerHTML;
@@ -63,13 +82,48 @@ document.addEventListener("DOMContentLoaded", () => {
 // End of Dom Loaded
 // Load selector
 function clear(){
-    document.body.innerHTML="";
-    console.log("Cleared");
+    workspace.innerHTML="";
+    console.log("Workspace cleared");
 }
+function navbar(){
+    const navbar = document.createElement("DIV");
+          navbar.setAttribute("class","navbar");
+          navbar.setAttribute("id", "navbar");
+          
+    let createOption = document.createElement("A");
+        createOption.setAttribute("href","#");
+        createOption.setAttribute("name", "create");
+        createOption.setAttribute("value", "new");
+        createOption.innerText = "Create a Question";
+    
+    let showOption = document.createElement("A");
+        showOption.setAttribute("href","#");
+        showOption.setAttribute("name", "show");
+        showOption.setAttribute("value", "read");
+        showOption.innerText = "Question List";
 
+    let aboutOption = document.createElement("A");
+        aboutOption.setAttribute("href","#");
+        aboutOption.setAttribute("name", "about");
+        aboutOption.setAttribute("value", "about");
+        aboutOption.innerText = "About";
+        aboutOption.style = "float:right"
+    
+    navbar.appendChild(createOption);
+    navbar.appendChild(showOption);
+    navbar.appendChild(aboutOption);
+
+    const workspace = document.createElement("DIV");
+          workspace.setAttribute("class", "main");
+          workspace.setAttribute("id","workspace");
+    
+    document.body.appendChild(navbar);
+    document.body.appendChild(workspace);
+}
 function loadQuestionList() //KISS will only do Question for now. It shows all the questions with a dropdown at top, dropdown filters questions
 {
     clear();
+    workspace = document.getElementById("workspace");
     //create dropdown with categories at top to filter default: all
     const dropdownNode = document.createElement("DIV");
           dropdownNode.setAttribute("class", "dropdown");
@@ -87,7 +141,7 @@ function loadQuestionList() //KISS will only do Question for now. It shows all t
 
     dropdownNode.appendChild(btn);
     dropdownNode.appendChild(dropdownContent);
-    document.body.appendChild(dropdownNode);
+    workspace.appendChild(dropdownNode);
     
     let filterNone = document.createElement("A");
         filterNone.setAttribute("href","#");
@@ -115,7 +169,7 @@ function loadQuestionList() //KISS will only do Question for now. It shows all t
         q.innerText = question.question;
         questionDiv.appendChild(q);
     })
-    document.body.appendChild(questionDiv);
+    workspace.appendChild(questionDiv);
 
 }
 
@@ -136,12 +190,12 @@ function formToParams(form_element){
 
 function loadForm(questionObj){
     clear();
-    
+    workspace = document.getElementById("workspace");
     const form = document.createElement("FORM");
           
           form.id="add-question-form";
           form.setAttribute("autocomplete", "off");
-    document.body.appendChild(form);
+    workspace.appendChild(form);
 
     //diagamInput stuff
     //create that part with eventListener that makes a Labeled Input for the diagram_info
@@ -161,6 +215,8 @@ function loadForm(questionObj){
     //if SAVE do fetch with PATCH method, save to backend (assuming validations pass)
 
 }
+
+navbar();
 /* Legacy code
 function loadForm(){
     clear();
