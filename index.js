@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     break;
                 case "about":
                     console.log("ABOUT!");
+                    console.log("Data Entry Interface for Blank");
                     break;
             }
         }
@@ -61,12 +62,12 @@ document.addEventListener("DOMContentLoaded", () => {
             let form = e.target;
             let params = formToParams(form);
             let configObj = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(params)
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(params)
             };
         fetch("http://localhost:3000/questions", configObj)
             .then(response => response.json())
@@ -80,12 +81,69 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
         }
+        else if(e.submitter === document.getElementById("editButton")){
+            let form = e.target;
+            let origQuestion = document.body.querySelector("input#question").placeholder;
+            let params = formToParams(form);
+                params["original"] = origQuestion;
+            let configObj = {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(params)
+            };
+            fetch(`http://localhost:3000/questions/${origQuestion}`, configObj)
+            .then(response => response.json())
+            .then(modded => {
+                const modifiedObj = new Question(modded.question, modded.answer, modded.dummy, modded.category.title, modded.diagram);
+                const originalObj = Question.find_by("question", origQuestion);
+                const indexToUpdate = Question.all.indexOf(originalObj);
+                Question.all.splice(indexToUpdate, 1, modifiedObj)
+                delete originalObj; //does this free up memory?
+                loadForm(modifiedObj);
+            })
+            .catch(error=> {
+                alert("Error in send");
+                console.log(error.message);
+            });
+        }
+        else if(e.submitter === document.getElementById("deleteButton")){
+            let form = e.target;
+            let origQuestion = document.body.querySelector("input#question").placeholder;
+            let params = { 'question': origQuestion };
+            let configObj = {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(params)
+            };
+            fetch(`http://localhost:3000/questions/${origQuestion}`, configObj)
+            .then(response => response.json())
+            .then(result => {
+                if(result["message"] != "Failed"){
+                    const objToDelete = Question.find_by("question", origQuestion);
+                    const indexToDelete = Question.all.indexOf(objToDelete);
+                    delete Question.all[indexToDelete]; //does this free up memory?
+                    Question.all.splice(indexToDelete, 1);
+                    loadQuestionList();
+                }
+            })
+            .catch(error=> {
+                alert("Error in delete");
+                console.log(error.message);
+            });
+        }
     });
 });
 // End of Dom Loaded
 // Load selector
 function clear(){
-    workspace.innerHTML="";
+    const workspace = document.getElementById("workspace");
+          workspace.innerHTML="";
     console.log("Workspace cleared");
 }
 function navbar(){
@@ -126,7 +184,7 @@ function navbar(){
 function loadQuestionList() //KISS will only do Question for now. It shows all the questions with a dropdown at top, dropdown filters questions
 {
     clear();
-    workspace = document.getElementById("workspace");
+    const workspace = document.getElementById("workspace");
     //create dropdown with categories at top to filter default: all
     const dropdownNode = document.createElement("DIV");
           dropdownNode.setAttribute("class", "dropdown");
@@ -196,7 +254,7 @@ function isEqual(obj1, obj2){
 }
 function loadForm(questionObj){
     clear();
-    workspace = document.getElementById("workspace");
+    const workspace = document.getElementById("workspace");
     const form = document.createElement("FORM");
           
           form.id="add-question-form";
@@ -206,10 +264,37 @@ function loadForm(questionObj){
     //diagamInput stuff
     //create that part with eventListener that makes a Labeled Input for the diagram_info
     questionObj.renderLabels(form)
-
+    const buttonDiv = document.createElement("DIV");
+          buttonDiv.setAttribute("id", "buttonBin")
     const submitBtn = document.createElement("BUTTON");
-    submitBtn.innerText = "Submit";
-    submitBtn.setAttribute("id", "submitButton");
+          submitBtn.innerText = "Submit";
+          submitBtn.setAttribute("id", "submitButton");
+    buttonDiv.appendChild(submitBtn);
+    form.appendChild(buttonDiv);
+
+    const editBtn = document.createElement("BUTTON");
+          editBtn.innerText = "Update";
+          editBtn.setAttribute("id", "editButton");
+    submitBtn.parentElement.appendChild(editBtn);
+
+    const deleteBtn = document.createElement("BUTTON");
+          deleteBtn.innerText= "Delete";
+          deleteBtn.setAttribute("id", "deleteButton");
+          deleteBtn.style.background="red";
+    submitBtn.parentElement.appendChild(deleteBtn);
+
+    const cancelBtn = document.createElement("BUTTON");
+          cancelBtn.innerText= "Cancel";
+          cancelBtn.setAttribute("id", "cancelButton");
+          cancelBtn.style.background="orange";
+          cancelBtn.addEventListener( "click", (e) => {
+            e.preventDefault();
+            console.log("RECURSIVE!");
+            loadForm(questionObj);
+          });
+    submitBtn.parentElement.appendChild(cancelBtn);
+
+
     //below is not KISS, GET WORKING THEN COME BACK TO COMPLICATED!
     /*
     if(Question.find_by("question", questionField.value)){
@@ -249,7 +334,7 @@ function loadForm(questionObj){
     */
     
    
-    form.appendChild(submitBtn);
+   
     //add submit button IF new obj
     //if editing, default is 'OK', if things change turn it to "save" and add a "cancel" button
 

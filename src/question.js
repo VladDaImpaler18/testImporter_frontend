@@ -23,6 +23,7 @@ class Question {
         return chosenQuestions;
         
     }
+    
     renderLabels(form){
         Object.keys(this).forEach( (p)=> { //this generates the labels for input fields
             if(typeof this[p] === typeof []){//if an array
@@ -67,8 +68,8 @@ class Question {
                         additionalRow.appendChild(btn);
                         const diagram_info = document.getElementById("diagram_info").parentElement
                         form.insertBefore(additionalRow, diagram_info);
-                        let submitBtn = document.getElementById("submitButton");
-                        submitBtn.parentElement.appendChild(submitBtn);
+                        let buttonBin = document.getElementById("buttonBin");
+                        buttonBin.parentElement.appendChild(buttonBin);
                     }
                     else{
                         dummyInputs.forEach( input =>{
@@ -91,6 +92,7 @@ class Question {
                 inputText.setAttribute("type", "text");
                 inputText.setAttribute("name", label);
                 inputText.setAttribute("id", label);
+                if(value){ inputText.placeholder = value; }
                 inputText.value=value;
             if(label === "dummy"){ inputText.setAttribute("name", "dummies"); }
             node.appendChild(inputLabel);
