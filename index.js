@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
             })
         }
         //if user clicks on navbar link do something
-        if(e.target.parentElement.id === "navbar")
+        if(e.target.parentElement && e.target.parentElement.id === "navbar")
         {
             //const selection = e.target.name; //create, show, about
             //if(selection==="create"){loadForm(new Question);}
@@ -38,9 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
         //if user clicks on question, show page (and editable parts) appear
-        if(e.target.parentElement.id === "questionsList"){
+        if(e.target.parentElement && e.target.parentElement.id === "questionsList"){
             let chosenQuestion = e.target.innerHTML;
-            qChoiceObj = Question.find_by("question", chosenQuestion);
+            const qChoiceObj = Question.find_by("question", chosenQuestion);
             loadForm(qChoiceObj);
         }
         
@@ -70,7 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
             };
         fetch("http://localhost:3000/questions", configObj)
             .then(response => response.json())
-            .then(obj=>console.log(obj))
+            .then(newQuestionObj => {
+                newQuestion = Question.create(newQuestionObj, newQuestionObj.category.title); //after this, go to show page
+                loadForm(newQuestion);
+            })
             .catch(error=> {
                 alert("Error in send");
                 console.log(error.message);
@@ -187,7 +190,10 @@ function formToParams(form_element){
     params["dummy"] = dummies;
     return params;
 }
-
+function isEqual(obj1, obj2){
+    //code to check if objects keys and values are the same.
+    debugger;
+}
 function loadForm(questionObj){
     clear();
     workspace = document.getElementById("workspace");
@@ -204,15 +210,50 @@ function loadForm(questionObj){
     const submitBtn = document.createElement("BUTTON");
     submitBtn.innerText = "Submit";
     submitBtn.setAttribute("id", "submitButton");
+    //below is not KISS, GET WORKING THEN COME BACK TO COMPLICATED!
+    /*
+    if(Question.find_by("question", questionField.value)){
+        //question is already in the system, so we are editing
+        const question = Question.find_by("question", questionField.value);
+        let inputFields = formToParams(workspace);
+
+        if(isEqual(question, inputFields)){
+            //fields are the same
+            //set button to OKAY
+        }
+        else {
+            //fields are different
+            submitBtn.innerText = "Update";
+            submitBtn.setAttribute("id", "updateButton");
+            const cancelBtn = document.createElement("BUTTON");
+                  cancelBtn.style.background="red";
+                  cancelBtn.addEventListener( "click", (e) => {
+                    loadForm(question);
+                  });
+            submitBtn.parentElement.appendChild(cancelBtn);
+        }
+        if(//all fields (excluding category) are empty){
+            //const deleteBtn = document.createElement("BUTTON");
+        }
+        
+        
+        //input fields will have the values
+        //OKAY button on bottom
+        //if values have changed, turn OKAY button transforms to SAVE, and add RED CANCEL button
+        //if CANCEL revert changes and button becomes OKAY again
+        //if SAVE do fetch with PATCH method, save to backend (assuming validations pass)
+    }else{
+        submitBtn.innerText = "Submit";
+        submitBtn.setAttribute("id", "submitButton");
+    }
+    */
+    
+   
     form.appendChild(submitBtn);
     //add submit button IF new obj
     //if editing, default is 'OK', if things change turn it to "save" and add a "cancel" button
 
-    //input fields will have the values
-    //OKAY button on bottom
-    //if values have changed, turn OKAY button transforms to SAVE, and add RED CANCEL button
-    //if CANCEL revert changes and button becomes OKAY again
-    //if SAVE do fetch with PATCH method, save to backend (assuming validations pass)
+    
 
 }
 

@@ -26,7 +26,6 @@ class Question {
     renderLabels(form){
         Object.keys(this).forEach( (p)=> { //this generates the labels for input fields
             if(typeof this[p] === typeof []){//if an array
-                console.log(`we got dummies here. p = ${p}`);
                 if(this[p].length > 0){ this[p].forEach(dummyQ => { form.appendChild(createField(p, dummyQ)); }) }
                 else{ 
                     form.appendChild(createField(p));
@@ -35,14 +34,13 @@ class Question {
                 }
             }
             else{
-                console.log("we aint dummies");
                 if(p==="category"){
                     const category = document.createElement("DIV");
                         category.setAttribute("class", "autocomplete");
                         category.setAttribute("style", "width:300px;");
 
                     const categoryInput = document.createElement("INPUT");
-                        categoryInput.setAttribute("id", "categoryInput");
+                        categoryInput.setAttribute("id", "category");
                         categoryInput.setAttribute("type", "text");
                         categoryInput.setAttribute("name", "category");
                         categoryInput.setAttribute("placeholder", "Category");
@@ -50,7 +48,7 @@ class Question {
                     
                     category.appendChild(categoryInput);
                     form.prepend(category);
-                    autocomplete(document.getElementById("categoryInput"), Category.all);
+                    autocomplete(document.getElementById("category"), Category.all);
                 }
                 else{ form.appendChild(createField(p,this[p] || null)); }
              }
@@ -143,7 +141,7 @@ class Question {
 }
 
 Question.all = [];
-//test & blank question -- Great for quick testing
+//test & blank question -- Great for quick testing, neither implemented into Question.all
 const tester = new Question("If the population of bobcats decreases, what will most likely be the long-term effect on the rabbit population?", "It will increase and then decrease.",
 ["It will increase, only.", "It will decrease, only.", "It will decrease and then increase."],"Biology", false);
 
