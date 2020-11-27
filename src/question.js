@@ -108,14 +108,12 @@ class Question {
     }
 
     static create(questionObj, category){
-        if(questionObj.question){
+            if(typeof questionObj.category != typeof ""){questionObj.category = category;}
             const q = new Question(questionObj.question, questionObj.answer, questionObj.dummy, questionObj.category||category); 
             //if(questionObj.category){q.category = category;} //put this back if i broke something
             if(questionObj.diagram_info){ q.diagram_info = questionObj.diagram_info }
             Question.all.push(q);
             return q;
-        }
-        else{ return false; }
     }
 
     
