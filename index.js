@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 case "about":
                     console.log("ABOUT!");
                     console.log("Data Entry Interface for Blank");
+                    clear();
                     break;
             }
         }
@@ -83,9 +84,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else if(e.submitter === document.getElementById("editButton")){
             let form = e.target;
-            let origQuestion = document.body.querySelector("input#question").placeholder;
+            let origQuestion = formToParams(form, true);
             let params = formToParams(form);
-                params["original"] = origQuestion;
+                params["original"] = origQuestion.question;
             let configObj = {
                 method: "PATCH",
                 headers: {
@@ -94,14 +95,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify(params)
             };
-            fetch(`http://localhost:3000/questions/${origQuestion}`, configObj)
+            fetch(`http://localhost:3000/questions/`, configObj)
             .then(response => response.json())
             .then(modded => {
+                debugger;
                 const modifiedObj = new Question(modded.question, modded.answer, modded.dummy, modded.category.title, modded.diagram);
                 const originalObj = Question.find_by("question", origQuestion);
+                debugger;
                 const indexToUpdate = Question.all.indexOf(originalObj);
                 Question.all.splice(indexToUpdate, 1, modifiedObj)
                 delete originalObj; //does this free up memory?
+                console.log("thing deleted");
                 loadForm(modifiedObj);
             })
             .catch(error=> {
@@ -111,8 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else if(e.submitter === document.getElementById("deleteButton")){
             let form = e.target;
-            let origQuestion = document.body.querySelector("input#question").placeholder;
-            let params = { 'question': origQuestion };
+            let params = formToParams(form, true);
             let configObj = {
                 method: "DELETE",
                 headers: {
@@ -121,11 +124,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify(params)
             };
-            fetch(`http://localhost:3000/questions/${origQuestion}`, configObj)
+            fetch(`http://localhost:3000/questions/`, configObj)
             .then(response => response.json())
             .then(result => {
                 if(result["message"] != "Failed"){
-                    const objToDelete = Question.find_by("question", origQuestion);
+                    const objToDelete = Question.find_by("question", params.question);
                     const indexToDelete = Question.all.indexOf(objToDelete);
                     delete Question.all[indexToDelete]; //does this free up memory?
                     Question.all.splice(indexToDelete, 1);
@@ -236,10 +239,20 @@ function loadQuestionList() //KISS will only do Question for now. It shows all t
 }
 
 //Form class?
-function formToParams(form_element){
+function formToParams(form_element, placeholderOption){
     const params = {};
     const dummies = [];
     let inputFields = form_element.querySelectorAll("input");
+    if(placeholderOption){
+        inputFields.forEach( element => {
+            if(element.placeholder){
+                if(element.name === "dummies") { return dummies.push(element.placeholder); }
+                else { return params[element.name] = element.placeholder; }
+            }
+        });
+        params["dummy"] = dummies;
+        return params;
+    } else{
     inputFields.forEach( element => { 
         if(element.value){ 
             if(element.name === "dummies") { return dummies.push(element.value); }
@@ -248,7 +261,9 @@ function formToParams(form_element){
     });
     params["dummy"] = dummies;
     return params;
+    }
 }
+
 function isEqual(obj1, obj2){
     //code to check if objects keys and values are the same.
     debugger;
