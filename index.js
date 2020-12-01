@@ -230,7 +230,7 @@ function loadQuestionList() //KISS will only do Question for now. It shows all t
     Question.all.forEach( question => {
         let q = document.createElement("P");
         q.setAttribute("name", question.category);
-        q.innerText = question.question;
+        q.innerHTML = question.question;
         questionDiv.appendChild(q);
     })
     workspace.appendChild(questionDiv);

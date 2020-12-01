@@ -8,7 +8,7 @@ class Question {
     }
     pickDummies(requiredNumber = 3){
         const chosenQuestions = [];
-        let questionPool =  [...this.dummy]
+        let questionPool =  [...this.dummy];
         if(requiredNumber > questionPool.length){ return console.log(`Not enough questions to fulfil ${requiredNumber} questions`);} //make a throw and catch exception
         const pickRandomly = (array) => {
             return array[array.length * Math.random() << 0];
@@ -17,8 +17,6 @@ class Question {
             const randomQ = pickRandomly(questionPool); // => "this answer is a dummy answer."
             const pickedQ = questionPool.splice(questionPool.indexOf(randomQ),1); //finds index of the above result, and splices 1 out, returning the one removed
             chosenQuestions.push(randomQ);
-            console.log(`chosen length = ${chosenQuestions.length}`);
-            console.log(`original array = ${this.dummy.length}`);
         }
         return chosenQuestions;
         
