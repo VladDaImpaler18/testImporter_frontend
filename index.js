@@ -25,16 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
             //if(selection==="create"){loadForm(new Question);}
             switch(e.target.name){
                 case "create":
-                    console.log("CREATE!");
                     loadForm(new Question)
                     break;
                 case "show":
-                    console.log("SHOW!");
                     loadQuestionList();
                     break;
                 case "about":
-                    console.log("ABOUT!");
-                    console.log("Data Entry Interface for Blank");
+                    console.log("Data Entry ");
                     clear();
                     break;
             }
@@ -186,7 +183,6 @@ function navbar(){
 function loadQuestionList() //KISS will only do Question for now. It shows all the questions with a dropdown at top, dropdown filters questions
 {
     clear();
-    console.log("Question list loaded");
     const workspace = document.getElementById("workspace");
     //create dropdown with categories at top to filter default: all
     const dropdownNode = document.createElement("DIV");
@@ -265,7 +261,6 @@ function formToParams(form_element, placeholderOption){
 
 function loadForm(questionObj){
     clear();
-    console.log("Form Loaded");
     const workspace = document.getElementById("workspace");
     const form = document.createElement("FORM");
           
